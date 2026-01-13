@@ -5,7 +5,7 @@ const Services = require("../controller/services")
 
 route.get("/", (req, res) => {
     res.send({
-        owner: "Andhika from NDBOTZ",
+        author: "yazky",
         endpoint: {
             getOngoingAnime: "/api/v1/ongoing/:page",
             getCompletedAnime: "/api/v1/completed/:page",
