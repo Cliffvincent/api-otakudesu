@@ -1,339 +1,292 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Spotify Dashboard</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-  <style>
-    *{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif}
-    body{background-color:#121212;color:#fff;overflow-x:hidden}
-    .app-container{display:flex;flex-direction:column;min-height:100vh;padding:20px;padding-bottom:70px}
-    .container{max-width:100%}
-    h1,h2{color:#1DB954;margin:15px 0;padding:0 15px}
-    .section{margin-bottom:20px}
-    .carousel-container{position:relative;overflow:hidden;padding-bottom:20px}
-    .carousel{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scroll-behavior:smooth;-webkit-overflow-scrolling:touch;padding:0 15px;gap:15px}
-    .carousel::-webkit-scrollbar{display:none}
-    .card{flex:0 0 180px;background-color:#1e1e1e;border-radius:8px;overflow:hidden;scroll-snap-align:start;transition:transform .2s;cursor:pointer}
-    .card:hover{transform:scale(1.03)}
-    .card img{width:100%;height:180px;object-fit:cover}
-    .card-content{padding:10px}
-    .card-content h3{margin:0 0 8px 0;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#fff}
-    .embed-container{position:relative;padding-bottom:100%;height:0;overflow:hidden;margin-top:10px;border-radius:8px}
-    .embed-container iframe{position:absolute;top:0;left:0;width:100%;height:100%}
-    .loading{text-align:center;padding:20px;color:#aaa}
-    .view{display:none}
-    .view.active{display:block}
-    .search-container{display:flex;align-items:center;background-color:#2d2d2d;border-radius:20px;padding:8px 15px;margin:15px;color:#fff}
-    .search-container input{border:none;background:transparent;color:#fff;flex:1;outline:none;padding:5px}
-    .search-container button{background:none;border:none;color:#fff;cursor:pointer}
-    .panel{margin:15px;background-color:#1e1e1e;border-radius:8px;padding:15px}
-    .search-results{display:none}
-    .search-results.show{display:block}
-    .result-item{display:flex;align-items:center;gap:10px;margin-bottom:10px;padding:10px;border-radius:5px;background-color:#2d2d2d}
-    .result-item img{width:50px;height:50px;border-radius:5px;object-fit:cover}
-    .result-item-info h3{font-size:16px;margin-bottom:5px}
-    .result-item-info p{font-size:14px;color:#b3b3b3;margin:0}
-    .btn{border:none;border-radius:20px;padding:6px 14px;cursor:pointer;font-weight:600;background-color:#1DB954;color:#fff;white-space:nowrap}
-    .btn.secondary{background-color:#444}
-    .btn:active{transform:scale(.98)}
-    .bottom-nav{position:fixed;bottom:0;left:0;right:0;display:flex;justify-content:space-around;align-items:center;background-color:#121212;border-top:1px solid #333;padding:10px 0;z-index:1000}
-    .nav-item{display:flex;flex-direction:column;align-items:center;color:#b3b3b3;text-decoration:none;padding:8px 15px}
-    .nav-item.active{color:#1db954}
-    .nav-item i{font-size:24px;margin-bottom:5px}
-    .nav-item span{font-size:12px}
-    @media (min-width:768px){
-      .card{flex:0 0 200px}
-      .card img{height:200px}
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Spotify Dashboard</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif}
+body{background:#121212;color:#fff;overflow-x:hidden}
+.app-container{display:flex;flex-direction:column;min-height:100vh;padding:20px;padding-bottom:80px}
+.container{max-width:100%}
+h1,h2{color:#1DB954;margin:15px 0}
+.section{margin-bottom:20px}
+.carousel-container{position:relative;overflow:hidden;padding-bottom:20px}
+.carousel{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scroll-behavior:smooth;-webkit-overflow-scrolling:touch;padding:0 5px;gap:15px}
+.carousel::-webkit-scrollbar{display:none}
+.card{flex:0 0 180px;background:#1e1e1e;border-radius:10px;overflow:hidden;scroll-snap-align:start;cursor:pointer;transition:transform .2s}
+.card:hover{transform:scale(1.03)}
+.card img{width:100%;height:180px;object-fit:cover}
+.card-content{padding:10px}
+.card-content h3{font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.embed-container{position:relative;padding-bottom:100%;height:0;overflow:hidden;margin-top:10px;border-radius:10px}
+.embed-container iframe{position:absolute;top:0;left:0;width:100%;height:100%}
+.loading{text-align:center;padding:20px;color:#aaa}
+.view{display:none}
+.view.active{display:block}
+.search-container{display:flex;align-items:center;background:#2d2d2d;border-radius:25px;padding:10px 15px;margin:15px 0}
+.search-container input{flex:1;min-width:0;border:none;background:transparent;color:#fff;outline:none}
+.search-container button{background:none;border:none;color:#fff;cursor:pointer}
+.panel{background:#1e1e1e;border-radius:14px;padding:15px}
+.search-results{display:none}
+.search-results.show{display:block}
+.result-item{background:#2a2a2a;border-radius:16px;padding:15px;margin-bottom:15px;display:flex;flex-direction:column;gap:12px}
+.result-item:last-child{margin-bottom:0}
+.result-top{display:flex;gap:12px;align-items:flex-start;min-width:0}
+.result-top img{width:70px;height:70px;border-radius:12px;object-fit:cover;flex:0 0 auto}
+.result-info{flex:1;min-width:0;overflow:hidden}
+.result-info h3{font-size:16px;line-height:1.25;margin-bottom:6px;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.result-info p{font-size:13px;color:#b3b3b3;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.result-actions{display:flex;gap:10px}
+.btn{flex:1;border:none;border-radius:25px;padding:10px 12px;font-weight:700;cursor:pointer}
+.btn.download{background:#3d3d3d;color:#fff}
+.btn.open{background:#1DB954;color:#fff}
+.btn:active{transform:scale(.98)}
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:#121212;border-top:1px solid #333;display:flex;justify-content:space-around;padding:10px 0;z-index:1000}
+.nav-item{display:flex;flex-direction:column;align-items:center;color:#aaa;text-decoration:none;font-size:12px;padding:6px 12px}
+.nav-item.active{color:#1DB954}
+.nav-item i{font-size:22px;margin-bottom:4px}
+@media(min-width:768px){
+.card{flex:0 0 200px}
+.card img{height:200px}
+}
+</style>
 </head>
 <body>
-  <div class="app-container">
-    <div class="container">
-      <div id="homeView" class="view active">
-        <h1>Spotify Dashboard</h1>
 
-        <div class="section">
-          <h2>Trending Songs</h2>
-          <div class="carousel-container"><div class="carousel" id="trendingSongs"></div></div>
-        </div>
+<div class="app-container">
+  <div class="container">
 
-        <div class="section">
-          <h2>Popular Artists</h2>
-          <div class="carousel-container"><div class="carousel" id="popularArtists"></div></div>
-        </div>
+    <div id="homeView" class="view active">
+      <h1>Spotify Dashboard</h1>
 
-        <div class="section">
-          <h2>Popular Albums</h2>
-          <div class="carousel-container"><div class="carousel" id="popularAlbums"></div></div>
-        </div>
-
-        <div class="section">
-          <h2>Popular Radio</h2>
-          <div class="carousel-container"><div class="carousel" id="popularRadio"></div></div>
-        </div>
-
-        <div class="section">
-          <h2>Featured Charts</h2>
-          <div class="carousel-container"><div class="carousel" id="featuredCharts"></div></div>
-        </div>
+      <div class="section">
+        <h2>Trending Songs</h2>
+        <div class="carousel-container"><div class="carousel" id="trendingSongs"></div></div>
       </div>
 
-      <div id="searchView" class="view">
-        <h1>Search</h1>
-        <div class="search-container">
-          <input type="text" id="searchInput" placeholder="Search for songs...">
-          <button id="searchButton"><i class="fas fa-search"></i></button>
-        </div>
-        <div class="panel search-results" id="searchResults"></div>
+      <div class="section">
+        <h2>Popular Artists</h2>
+        <div class="carousel-container"><div class="carousel" id="popularArtists"></div></div>
       </div>
 
-      <div id="downloadView" class="view">
-        <h1>Downloader</h1>
-        <div class="panel">
-          <div style="color:#b3b3b3;margin-bottom:10px;line-height:1.4;">
-            Download Songs, Playlists, Albums &amp; Artist Songs from Spotify
-          </div>
-          <div class="search-container" style="margin:0;">
-            <input type="text" id="downloadUrlInput" placeholder="Paste Spotify URL here...">
-            <button id="downloadBtn" title="Download"><i class="fas fa-download"></i></button>
-          </div>
-          <div id="downloadStatus" class="loading" style="padding:12px 0;display:none;"></div>
-          <div style="margin-top:10px;display:flex;gap:10px;flex-wrap:wrap;">
-            <button class="btn secondary" id="openDownloadBtn">Open Download</button>
-            <button class="btn secondary" id="clearDownloadBtn">Clear</button>
-          </div>
+      <div class="section">
+        <h2>Popular Albums</h2>
+        <div class="carousel-container"><div class="carousel" id="popularAlbums"></div></div>
+      </div>
+
+      <div class="section">
+        <h2>Popular Radio</h2>
+        <div class="carousel-container"><div class="carousel" id="popularRadio"></div></div>
+      </div>
+
+      <div class="section">
+        <h2>Featured Charts</h2>
+        <div class="carousel-container"><div class="carousel" id="featuredCharts"></div></div>
+      </div>
+    </div>
+
+    <div id="searchView" class="view">
+      <h1>Search</h1>
+      <div class="search-container">
+        <input type="text" id="searchInput" placeholder="Search for songs...">
+        <button id="searchButton"><i class="fas fa-search"></i></button>
+      </div>
+      <div class="panel search-results" id="searchResults"></div>
+    </div>
+
+    <div id="downloadView" class="view">
+      <h1>Downloader</h1>
+      <div class="panel">
+        <div style="color:#b3b3b3;margin-bottom:10px;line-height:1.4">
+          Download Songs, Playlists, Albums &amp; Artist Songs from Spotify
+        </div>
+        <div class="search-container" style="margin:0">
+          <input type="text" id="downloadUrlInput" placeholder="Paste Spotify URL here...">
+          <button id="downloadBtn"><i class="fas fa-download"></i></button>
+        </div>
+        <div id="downloadStatus" style="margin-top:10px;color:#aaa;word-break:break-word"></div>
+        <div style="margin-top:12px;display:flex;gap:10px;flex-wrap:wrap">
+          <button class="btn download" id="openDownloadBtn" style="flex:1">Open Download</button>
+          <button class="btn download" id="clearDownloadBtn" style="flex:1">Clear</button>
         </div>
       </div>
     </div>
 
-    <div class="bottom-nav">
-      <a href="#" class="nav-item active" data-view="homeView">
-        <i class="fas fa-home"></i><span>Home</span>
-      </a>
-      <a href="#" class="nav-item" data-view="searchView">
-        <i class="fas fa-search"></i><span>Search</span>
-      </a>
-      <a href="#" class="nav-item" data-view="downloadView">
-        <i class="fas fa-download"></i><span>Download</span>
-      </a>
-    </div>
   </div>
+</div>
 
-  <script>
-    let lastDownloadLink=""
+<div class="bottom-nav">
+  <a href="#" class="nav-item active" data-view="homeView"><i class="fas fa-home"></i><span>Home</span></a>
+  <a href="#" class="nav-item" data-view="searchView"><i class="fas fa-search"></i><span>Search</span></a>
+  <a href="#" class="nav-item" data-view="downloadView"><i class="fas fa-download"></i><span>Download</span></a>
+</div>
 
-    async function fetchHomeData(){
-      try{
-        const response=await fetch("https://betadash-api-swordslush-production.up.railway.app/spotify/home")
-        const data=await response.json()
-        return data.results||null
-      }catch(e){
-        console.error(e)
-        return null
-      }
-    }
+<script>
+const HOME_API="https://betadash-api-swordslush-production.up.railway.app/spotify/home"
+let lastDownloadLink=""
 
-    function getFirstTruthy(){
-      for(let i=0;i<arguments.length;i++){
-        const v=arguments[i]
-        if(v!==undefined&&v!==null&&String(v).trim()!=="")return v
-      }
-      return null
-    }
+function setView(id){
+document.querySelectorAll(".view").forEach(v=>v.classList.remove("active"))
+document.getElementById(id).classList.add("active")
+document.querySelectorAll(".nav-item").forEach(n=>n.classList.remove("active"))
+document.querySelector(`.nav-item[data-view="${id}"]`).classList.add("active")
+if(id==="searchView")document.getElementById("searchInput").focus()
+if(id==="downloadView")document.getElementById("downloadUrlInput").focus()
+}
 
-    function buildSpotifyEmbedFromUrl(url){
-      if(!url||typeof url!=="string")return null
-      try{
-        const u=new URL(url)
-        const host=u.hostname.replace(/^www\./,"")
-        if(!host.includes("open.spotify.com"))return null
-        const parts=u.pathname.split("/").filter(Boolean)
-        if(parts.length>=2){
-          return `https://open.spotify.com/embed/${parts[0]}/${parts[1]}`
-        }
-        return null
-      }catch(e){
-        return null
-      }
-    }
+document.querySelectorAll(".nav-item").forEach(item=>{
+item.addEventListener("click",e=>{
+e.preventDefault()
+setView(item.dataset.view)
+})
+})
 
-    function resolveCardFields(item,isRadio){
-      const title=getFirstTruthy(item.title,item.name,"Untitled")
-      const href=getFirstTruthy(item.href,item.url,item.externalUrl,item.shareUrl,item.link)
-      const image=getFirstTruthy(isRadio?item.image:null,item.thumbnail,item.image,item.cover,item?.images?.[0]?.url)
-      const embedUrl=getFirstTruthy(isRadio?item.playlist:null,item.embedUrl,item.embed,item.playlist,item.uri?`https://open.spotify.com/embed?uri=${encodeURIComponent(item.uri)}`:null,buildSpotifyEmbedFromUrl(href))
-      return {title,href,image,embedUrl}
-    }
+function first(){
+for(let i=0;i<arguments.length;i++){
+const v=arguments[i]
+if(v!==undefined&&v!==null&&String(v).trim()!=="")return v
+}
+return ""
+}
 
-    function renderCards(containerId,items,isRadio){
-      const container=document.getElementById(containerId)
-      container.innerHTML=""
-      if(!items||!Array.isArray(items)||items.length===0){
-        container.innerHTML='<div class="loading">No items.</div>'
-        return
-      }
-      items.forEach(item=>{
-        const f=resolveCardFields(item,!!isRadio)
-        const card=document.createElement("div")
-        card.className="card"
-        card.onclick=()=>{if(f.href)window.open(f.href,"_blank")}
-        const safeImg=f.image||"https://via.placeholder.com/300x300?text=Spotify"
-        const embedHtml=f.embedUrl?`<div class="embed-container"><iframe src="${f.embedUrl}" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe></div>`:`<div class="loading" style="padding:10px 0;">No preview</div>`
-        card.innerHTML=`<img src="${safeImg}" alt="${f.title}"><div class="card-content"><h3 title="${f.title}">${f.title}</h3>${embedHtml}</div>`
-        container.appendChild(card)
-      })
-    }
+function resolveHomeItem(item,isRadio){
+const title=first(item.title,item.name)
+const href=first(item.href,item.url,item.link)
+const image=first(isRadio?item.image:null,item.thumbnail,item.image)
+const embed=first(item.embedUrl,isRadio?item.playlist:null,item.playlist,item.embed)
+return {title,href,image,embed}
+}
 
-    async function initDashboard(){
-      document.querySelectorAll(".carousel").forEach(c=>c.innerHTML='<div class="loading">Loading...</div>')
-      const results=await fetchHomeData()
-      if(results){
-        renderCards("trendingSongs",results.trendingSongs,false)
-        renderCards("popularArtists",results.popularArtists,false)
-        renderCards("popularAlbums",results.popularAlbums,false)
-        renderCards("popularRadio",results.popularRadio,true)
-        renderCards("featuredCharts",results.featuredCharts,false)
-      }else{
-        document.querySelectorAll(".carousel").forEach(c=>c.innerHTML='<div class="loading">Failed to load.</div>')
-      }
-    }
+function renderHomeCards(containerId,items,isRadio){
+const c=document.getElementById(containerId)
+c.innerHTML=""
+if(!Array.isArray(items)||items.length===0){
+c.innerHTML='<div class="loading">No items.</div>'
+return
+}
+items.forEach(item=>{
+const f=resolveHomeItem(item,!!isRadio)
+const card=document.createElement("div")
+card.className="card"
+card.onclick=()=>{if(f.href)window.open(f.href,"_blank")}
+card.innerHTML=`
+<img src="${f.image||'https://via.placeholder.com/300x300?text=Spotify'}" alt="${f.title}">
+<div class="card-content">
+<h3 title="${f.title}">${f.title}</h3>
+${f.embed?`<div class="embed-container"><iframe src="${f.embed}" frameborder="0" allow="encrypted-media"></iframe></div>`:""}
+</div>`
+c.appendChild(card)
+})
+}
 
-    function setActiveView(viewId){
-      document.querySelectorAll(".view").forEach(v=>v.classList.remove("active"))
-      document.getElementById(viewId).classList.add("active")
-      document.querySelectorAll(".nav-item").forEach(nav=>nav.classList.remove("active"))
-      const a=document.querySelector(`.nav-item[data-view="${viewId}"]`)
-      if(a)a.classList.add("active")
-      if(viewId==="searchView")document.getElementById("searchInput").focus()
-      if(viewId==="downloadView")document.getElementById("downloadUrlInput").focus()
-    }
+async function loadHome(){
+document.querySelectorAll(".carousel").forEach(c=>c.innerHTML='<div class="loading">Loading...</div>')
+try{
+const res=await fetch(HOME_API)
+const data=await res.json()
+const r=data.results||{}
+renderHomeCards("trendingSongs",r.trendingSongs,false)
+renderHomeCards("popularArtists",r.popularArtists,false)
+renderHomeCards("popularAlbums",r.popularAlbums,false)
+renderHomeCards("popularRadio",r.popularRadio,true)
+renderHomeCards("featuredCharts",r.featuredCharts,true)
+}catch(e){
+console.error(e)
+document.querySelectorAll(".carousel").forEach(c=>c.innerHTML='<div class="loading">Failed to load.</div>')
+}
+}
 
-    document.querySelectorAll(".nav-item").forEach(item=>{
-      item.addEventListener("click",e=>{
-        e.preventDefault()
-        setActiveView(item.getAttribute("data-view"))
-      })
-    })
+function buildDownloadLink(url){
+return `/Spotify/download?url=${encodeURIComponent(url)}`
+}
 
-    function showDownloadStatus(msg,show){
-      const el=document.getElementById("downloadStatus")
-      el.textContent=msg||""
-      el.style.display=show?"block":"none"
-    }
+function renderSearch(data){
+const box=document.getElementById("searchResults")
+const songs=Array.isArray(data&&data.songs)?data.songs:[]
+if(!songs.length){
+box.innerHTML='<div class="loading">No results found.</div>'
+return
+}
+box.innerHTML=""
+songs.slice(0,20).forEach(song=>{
+const title=first(song.title)
+const artist=first(song.artist)
+const duration=first(song.duration)
+const thumb=first(song.thumbnail,"https://via.placeholder.com/100?text=Spotify")
+const url=first(song.url)
+const item=document.createElement("div")
+item.className="result-item"
+item.innerHTML=`
+<div class="result-top">
+<img src="${thumb}" alt="${title}">
+<div class="result-info">
+<h3>${title}</h3>
+<p>${artist}${duration?(" • "+duration):""}</p>
+</div>
+</div>
+<div class="result-actions">
+<button class="btn download">To Download</button>
+<button class="btn open">Open</button>
+</div>`
+item.querySelector(".btn.download").onclick=()=>{
+document.getElementById("downloadUrlInput").value=url
+lastDownloadLink=""
+document.getElementById("downloadStatus").textContent="URL pasted."
+setView("downloadView")
+}
+item.querySelector(".btn.open").onclick=()=>{if(url)window.open(url,"_blank")}
+box.appendChild(item)
+})
+}
 
-    function normalizeTracks(data){
-      if(!data)return []
-      if(Array.isArray(data))return data
-      if(Array.isArray(data.tracks))return data.tracks
-      if(Array.isArray(data.results))return data.results
-      if(Array.isArray(data.data))return data.data
-      if(data.data&&Array.isArray(data.data.tracks))return data.data.tracks
-      if(data.data&&Array.isArray(data.data.results))return data.data.results
-      return []
-    }
+async function doSearch(){
+const q=document.getElementById("searchInput").value.trim()
+if(!q)return
+const box=document.getElementById("searchResults")
+box.classList.add("show")
+box.innerHTML='<div class="loading">Searching...</div>'
+try{
+const res=await fetch(`/song-details?search=${encodeURIComponent(q)}`)
+const data=await res.json()
+renderSearch(data)
+}catch(e){
+console.error(e)
+box.innerHTML='<div class="loading">Error searching. Try again.</div>'
+}
+}
 
-    function trackField(track,key){
-      return getFirstTruthy(track[key],track?.data?.[key],track?.track?.[key])
-    }
+document.getElementById("searchButton").addEventListener("click",doSearch)
+document.getElementById("searchInput").addEventListener("keydown",e=>{if(e.key==="Enter")doSearch()})
 
-    document.getElementById("searchButton").addEventListener("click",async()=>{
-      const q=document.getElementById("searchInput").value.trim()
-      if(!q)return
-      const resultsEl=document.getElementById("searchResults")
-      resultsEl.innerHTML='<div class="loading">Searching...</div>'
-      resultsEl.classList.add("show")
-      try{
-        const res=await fetch(`/song-details?search=${encodeURIComponent(q)}`)
-        const data=await res.json()
-        const tracks=normalizeTracks(data)
-        if(!tracks.length){
-          resultsEl.innerHTML='<div class="loading">No results found.</div>'
-          return
-        }
-        resultsEl.innerHTML=""
-        tracks.slice(0,10).forEach(track=>{
-          const title=getFirstTruthy(trackField(track,"title"),trackField(track,"name"),"")
-          const artist=getFirstTruthy(trackField(track,"artist"),trackField(track,"artists"),"")
-          const album=getFirstTruthy(trackField(track,"album"),"")
-          const thumb=getFirstTruthy(trackField(track,"thumbnail"),trackField(track,"image"),trackField(track,"cover"),"https://via.placeholder.com/100?text=Spotify")
-          const url=getFirstTruthy(trackField(track,"url"),trackField(track,"link"),trackField(track,"href"),"")
-          const item=document.createElement("div")
-          item.className="result-item"
-          item.innerHTML=`
-            <img src="${thumb}" alt="${title}">
-            <div class="result-item-info" style="flex:1;">
-              <h3>${title}</h3>
-              <p>${artist}${album?(" • "+album):""}</p>
-            </div>
-            <button class="btn secondary">To Download</button>
-            <button class="btn">Open</button>
-          `
-          const btns=item.querySelectorAll("button")
-          btns[0].onclick=()=>{
-            document.getElementById("downloadUrlInput").value=url
-            lastDownloadLink=""
-            showDownloadStatus("URL pasted. Tap Download.",true)
-            setActiveView("downloadView")
-          }
-          btns[1].onclick=()=>{if(url)window.open(url,"_blank")}
-          resultsEl.appendChild(item)
-        })
-      }catch(e){
-        console.error(e)
-        resultsEl.innerHTML='<div class="loading">Error searching. Try again.</div>'
-      }
-    })
+function openDownload(){
+const url=document.getElementById("downloadUrlInput").value.trim()
+if(!url){
+document.getElementById("downloadStatus").textContent="Paste a Spotify URL first."
+return
+}
+lastDownloadLink=buildDownloadLink(url)
+window.open(lastDownloadLink,"_blank")
+document.getElementById("downloadStatus").textContent="Opening..."
+}
 
-    document.getElementById("searchInput").addEventListener("keydown",e=>{
-      if(e.key==="Enter")document.getElementById("searchButton").click()
-    })
+document.getElementById("downloadBtn").addEventListener("click",openDownload)
+document.getElementById("openDownloadBtn").addEventListener("click",openDownload)
 
-    function buildDownloadLink(url){
-      return `/Spotify/download?url=${encodeURIComponent(url)}`
-    }
+document.getElementById("clearDownloadBtn").addEventListener("click",()=>{
+document.getElementById("downloadUrlInput").value=""
+lastDownloadLink=""
+document.getElementById("downloadStatus").textContent=""
+})
 
-    document.getElementById("downloadBtn").addEventListener("click",()=>{
-      const url=document.getElementById("downloadUrlInput").value.trim()
-      if(!url){
-        lastDownloadLink=""
-        showDownloadStatus("Paste a Spotify URL first.",true)
-        return
-      }
-      lastDownloadLink=buildDownloadLink(url)
-      showDownloadStatus("Opening download...",true)
-      window.open(lastDownloadLink,"_blank")
-    })
+document.getElementById("downloadUrlInput").addEventListener("keydown",e=>{if(e.key==="Enter")openDownload()})
 
-    document.getElementById("openDownloadBtn").addEventListener("click",()=>{
-      if(!lastDownloadLink){
-        const url=document.getElementById("downloadUrlInput").value.trim()
-        if(!url){
-          showDownloadStatus("Paste a Spotify URL first.",true)
-          return
-        }
-        lastDownloadLink=buildDownloadLink(url)
-      }
-      window.open(lastDownloadLink,"_blank")
-      showDownloadStatus("Opened.",true)
-    })
+document.addEventListener("DOMContentLoaded",()=>{
+loadHome()
+setView("homeView")
+})
+</script>
 
-    document.getElementById("clearDownloadBtn").addEventListener("click",()=>{
-      document.getElementById("downloadUrlInput").value=""
-      lastDownloadLink=""
-      showDownloadStatus("",false)
-    })
-
-    document.getElementById("downloadUrlInput").addEventListener("keydown",e=>{
-      if(e.key==="Enter")document.getElementById("downloadBtn").click()
-    })
-
-    document.addEventListener("DOMContentLoaded",()=>{
-      initDashboard()
-      setActiveView("homeView")
-    })
-  </script>
 </body>
 </html>
