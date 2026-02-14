@@ -10,6 +10,7 @@ app.use(express.json());
 
 
 app.get('/', (req, res) => {
+  res.set('Cache-Control', 'no-cache, no-store, must-revalidate');
   res.sendFile(path.join(__dirname, 'src', 'yo.html'));
 });
 
