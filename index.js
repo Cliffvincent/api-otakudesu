@@ -5,6 +5,12 @@ const route = require("./src/router/route")
 const { inject } = require("@vercel/analytics")
 
 inject();
+app.use(cors());
+
+
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'src', 'yo.html'));
+});
 
 
 
@@ -49,12 +55,10 @@ app.post('/Spotify/download', async (req, res) => {
 
 
 
-app.use(cors());
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'src', 'yo.html'));
-});
 
-const port = process.env.port || 8000;
+
+
+const port = process.env.port || 3000;
 
 app.listen(port, () => {
     try {
