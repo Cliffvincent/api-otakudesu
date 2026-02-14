@@ -3,10 +3,96 @@ const cors = require('cors');
 const path = require('path');
 const axios = require('axios');
 const app = express();
+const cheerio = require('cheerio');
 const route = require("./src/router/route")
 
 app.use(cors());
 app.use(express.json());
+
+app.get('/spotify/home', async (req, res) => {
+    try {
+        const { data } = await axios.get('https://open.spotify.com');
+        const $ = cheerio.load(data);
+
+        const trendingSongs = [];
+        const popularArtists = [];
+        const popularAlbums = [];
+        const popularRadio = [];
+        const featuredCharts = [];
+
+        // Parse Trending Songs
+        $('div[data-testid="carousel-mwp"]').eq(0).find('div[data-testid="home-card"]').each((i, el) => {
+            const title = $(el).find('a[data-encore-id="listRowTitle"]').text().trim();
+            const href = $(el).find('a[data-encore-id="listRowTitle"]').attr('href');
+const spot = `https://open.spotify.com${href}`;
+const embedUrl = spot.replace("/playlist/", "/embed/playlist/").replace("/album/", "/embed/album/").replace("/artist/", "/embed/artist/").replace("/track/", "/embed/track/");
+            const image = $(el).find('img[data-encore-id="image"]').attr('src');
+            if (title && href && image) {
+                trendingSongs.push({ title, thumbnail: image, href:spot, embedUrl: embedUrl });
+            }
+        });
+
+        // Parse Popular Artists
+        $('div[data-testid="carousel-mwp"]').eq(1).find('div[data-testid="home-card"]').each((i, el) => {
+            const title = $(el).find('a[data-encore-id="listRowTitle"]').text().trim();
+            const href = $(el).find('a[data-encore-id="listRowTitle"]').attr('href');
+const spotify = `https://open.spotify.com${href}`;
+const embedUrl = spotify.replace("/playlist/", "/embed/playlist/").replace("/album/", "/embed/album/").replace("/artist/", "/embed/artist/").replace("/track/", "/embed/track/");
+            const image = $(el).find('img[data-encore-id="image"]').attr('src');
+            if (title && href && image) {
+                popularArtists.push({ title, thumbnail: image, href: spotify, embedUrl: embedUrl});
+            }
+        });
+
+        // Parse Popular Albums
+        $('div[data-testid="carousel-mwp"]').eq(2).find('div[data-testid="home-card"]').each((i, el) => {
+            const title = $(el).find('a[data-encore-id="listRowTitle"]').text().trim();
+            const href = $(el).find('a[data-encore-id="listRowTitle"]').attr('href');
+const spotify = `https://open.spotify.com${href}`;
+const embedUrl = spotify.replace("/playlist/", "/embed/playlist/").replace("/album/", "/embed/album/").replace("/artist/", "/embed/artist/").replace("/track/", "/embed/track/");
+            const image = $(el).find('img[data-encore-id="image"]').attr('src');
+            if (title && href && image) {
+                popularAlbums.push({ title, thumbnail: image, href: spotify,  embedUrl: embedUrl });
+            }
+        });
+
+        // Parse Popular Radio
+        $('div[data-testid="carousel-mwp"]').eq(3).find('div[data-testid="home-card"]').each((i, el) => {
+            const title = $(el).find('a[data-encore-id="listRowTitle"]').text().trim();
+            const href = $(el).find('a[data-encore-id="listRowTitle"]').attr('href');
+            const spotify = `https://open.spotify.com${href}`;
+const embedUrl = spotify.replace("/playlist/", "/embed/playlist/").replace("/album/", "/embed/album/").replace("/artist/", "/embed/artist/").replace("/track/", "/embed/track/");
+            const image = $(el).find('img[data-encore-id="image"]').attr('src');
+            if (title && href && image) {
+                popularRadio.push({ title, image, href: spotify,  playlist: embedUrl});
+            }
+        });
+
+        // Parse Featured Charts
+        $('div[data-testid="carousel-mwp"]').eq(4).find('div[data-testid="home-card"]').each((i, el) => {
+            const title = $(el).find('a[data-encore-id="listRowTitle"]').text().trim();
+            const href = $(el).find('a[data-encore-id="listRowTitle"]').attr('href');
+            const spotify = `https://open.spotify.com${href}`;
+const embedUrl = spotify.replace("/playlist/", "/embed/playlist/").replace("/album/", "/embed/album/").replace("/artist/", "/embed/artist/").replace("/track/", "/embed/track/");
+            const image = $(el).find('img[data-encore-id="image"]').attr('src');
+            if (title && href && image) {
+                featuredCharts.push({ title, thumbnail: image, href: spotify, playlist: embedUrl });
+            }
+        });
+
+        res.json({
+            author: "yazky",
+            results: {
+            trendingSongs,
+            popularArtists,
+            popularAlbums,
+            popularRadio,
+            featuredCharts
+            }});
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
 
 
 app.get('/', (req, res) => {
