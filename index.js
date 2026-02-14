@@ -1,11 +1,12 @@
 const express = require('express');
 const cors = require('cors');
+const path = require('path');
+const axios = require('axios');
 const app = express();
 const route = require("./src/router/route")
-const { inject } = require("@vercel/analytics")
 
-inject();
 app.use(cors());
+app.use(express.json());
 
 
 app.get('/', (req, res) => {
@@ -31,9 +32,9 @@ app.get('/song-details', async (req, res) => {
   }
 });
 
-app.post('/Spotify/download', async (req, res) => {
+app.get('/spotify/download', async (req, res) => {
   try {
-    const { url } = req.body;
+    const { url } = req.query;
     if (!url) {
       return res.status(400).json({ error: 'URL parameter is required' });
     }
@@ -45,25 +46,25 @@ app.post('/Spotify/download', async (req, res) => {
         'x-api-key': API_KEY,
         'origin': 'https://spotdown.org',
         'referer': 'https://spotdown.org/',
-      }
+      },
+    responseType: 'stream' 
     });
-    res.json(response.data);
+
+
+    res.set({
+      'Content-Type': 'audio/mpeg',
+      'Content-Disposition': 'attachment; filename="song.mp3"',
+    });
+    // I-stream ang video data papunta sa response
+    response.data.pipe(res);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(500).send(error.message);
   }
 });
 
 
+const port = process.env.PORT || 5000;
 
-
-
-
-const port = process.env.port || 3000;
-
-app.listen(port, () => {
-    try {
-        console.log(`Running on localhost:${port}`);
-    } catch (error) {
-        throw error;
-    }
-}); 
+app.listen(port, '0.0.0.0', () => {
+    console.log(`Running on 0.0.0.0:${port}`);
+});
