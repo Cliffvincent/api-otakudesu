@@ -169,16 +169,7 @@ const title=first(item.title,item.name)
 const href=first(item.href,item.url,item.link)
 const image=first(isRadio?item.image:null,item.thumbnail,item.image)
 const embed=first(item.embedUrl,isRadio?item.playlist:null,item.playlist,item.embed)
-let embedClick=first(item.embedLink,item.embedHref,item.playlistUrl,item.playlist,item.href,item.url,item.link)
-if(embed && typeof embed==="string"){
-try{
-const u=new URL(embed,window.location.href)
-if(u.hostname.includes("open.spotify.com") && u.pathname.startsWith("/embed/")){
-embedClick="https://open.spotify.com"+u.pathname.replace("/embed","")
-}
-}catch(e){}
-}
-if(!embedClick)embedClick=href
+const embedClick=embed || ""
 return {title,href,image,embed,embedClick}
 }
 
