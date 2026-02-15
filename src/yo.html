@@ -1,6 +1,22 @@
-<!DOCTYPE html><html class="mobile-web-player" lang="en" dir="ltr"><head><meta charSet="utf-8"/><title>Spotify – Mobile Web Player</title><link rel="icon" sizes="32x32" type="image/png" href="https://open.spotifycdn.com/cdn/images/favicon32.b64ecc03.png"/><link rel="icon" sizes="16x16" type="image/png" href="https://open.spotifycdn.com/cdn/images/favicon16.1c487bff.png"/><link rel="icon" href="https://open.spotifycdn.com/cdn/images/favicon.0f31d2ea.ico"/>  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><link rel="preload" href="https://encore.scdn.co/fonts/SpotifyMixUI-Regular-cc3b1de388efa4cbca6c75cebc24585e.woff2" as="font" type="font/woff2" crossorigin="anonymous"/><link rel="preload" href="https://encore.scdn.co/fonts/SpotifyMixUITitleVariable-8769ccfde3379b7ebcadd9529b49d0cc.woff2" as="font" type="font/woff2" crossorigin="anonymous"/><link rel="preload" href="https://encore.scdn.co/fonts/SpotifyMixUI-Bold-4264b799009b1db5c491778b1bc8e5b7.woff2" as="font" type="font/woff2" crossorigin="anonymous"/><link rel="preload" href="https://encore.scdn.co/fonts/SpotifyMixUITitleVariable-8769ccfde3379b7ebcadd9529b49d0cc.woff2" as="font" type="font/woff2" crossorigin="anonymous"/><meta property="og:site_name" content="Spotify"/><meta property="fb:app_id" content="174829003346"/><link rel="canonical" href="https://open.spotify.com/download"/><link rel="manifest" href="https://open.spotifycdn.com/cdn/generated/manifest-mobile-web-player.a1ddf51c.json"/>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<!DOCTYPE html>
+<html class="mobile-web-player" lang="en" dir="ltr">
+<head>
+<meta charSet="utf-8"/>
+<title>Spotify – Mobile Web Player</title>
+<link rel="icon" sizes="32x32" type="image/png" href="https://open.spotifycdn.com/cdn/images/favicon32.b64ecc03.png"/>
+<link rel="icon" sizes="16x16" type="image/png" href="https://open.spotifycdn.com/cdn/images/favicon16.1c487bff.png"/>
+<link rel="icon" href="https://open.spotifycdn.com/cdn/images/favicon.0f31d2ea.ico"/>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<link rel="preload" href="https://encore.scdn.co/fonts/SpotifyMixUI-Regular-cc3b1de388efa4cbca6c75cebc24585e.woff2" as="font" type="font/woff2" crossorigin="anonymous"/>
+<link rel="preload" href="https://encore.scdn.co/fonts/SpotifyMixUITitleVariable-8769ccfde3379b7ebcadd9529b49d0cc.woff2" as="font" type="font/woff2" crossorigin="anonymous"/>
+<link rel="preload" href="https://encore.scdn.co/fonts/SpotifyMixUI-Bold-4264b799009b1db5c491778b1bc8e5b7.woff2" as="font" type="font/woff2" crossorigin="anonymous"/>
+<link rel="preload" href="https://encore.scdn.co/fonts/SpotifyMixUITitleVariable-8769ccfde3379b7ebcadd9529b49d0cc.woff2" as="font" type="font/woff2" crossorigin="anonymous"/>
+<meta property="og:site_name" content="Spotify"/>
+<meta property="fb:app_id" content="174829003346"/>
+<link rel="canonical" href="https://open.spotify.com/download"/>
+<link rel="manifest" href="https://open.spotifycdn.com/cdn/generated/manifest-mobile-web-player.a1ddf51c.json"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif}
 body{background:#121212;color:#fff;overflow-x:hidden}
@@ -151,8 +167,18 @@ function resolveHomeItem(item,isRadio){
 const title=first(item.title,item.name)
 const href=first(item.href,item.url,item.link)
 const image=first(isRadio?item.image:null,item.thumbnail,item.image)
-const embed=first(item.embedUrl,isRadio?item.playlist:null,item.playlist,item.embed)
-return {title,href,image,embed}
+let embed=first(item.embedUrl,isRadio?item.playlist:null,item.playlist,item.embed)
+let embedClick=first(item.embedLink,item.embedHref,item.embedUrl,item.playlistUrl,item.playlist,item.href,item.url,item.link)
+if(embed && typeof embed==="string"){
+try{
+const u=new URL(embed,window.location.href)
+if(u.hostname.includes("open.spotify.com") && u.pathname.startsWith("/embed/")){
+embedClick="https://open.spotify.com"+u.pathname.replace("/embed","")
+}
+}catch(e){}
+}
+if(!embedClick && href)embedClick=href
+return {title,href,image,embed,embedClick}
 }
 
 function renderHomeCards(containerId,items,isRadio){
@@ -171,11 +197,20 @@ card.innerHTML=`
 <img src="${f.image||'https://via.placeholder.com/300x300?text=Spotify'}" alt="${f.title}">
 <div class="card-content">
 <h3 title="${f.title}">${f.title}</h3>
-${f.embed?`<div class="embed-container"><iframe src="${f.embed}" frameborder="0" allow="encrypted-media"></iframe></div>`:""}
+${f.embed?`<div class="embed-container" data-embed-click="${(f.embedClick||"").replace(/"/g,"&quot;")}"><iframe src="${f.embed}" frameborder="0" allow="encrypted-media"></iframe></div>`:""}
 </div>`
 c.appendChild(card)
 })
 }
+
+document.addEventListener("click",e=>{
+const wrap=e.target.closest(".embed-container")
+if(!wrap)return
+e.preventDefault()
+e.stopPropagation()
+const link=wrap.getAttribute("data-embed-click")
+if(link)window.open(link,"_blank")
+},true)
 
 async function loadHome(){
 document.querySelectorAll(".carousel").forEach(c=>c.innerHTML='<div class="loading">Loading...</div>')
