@@ -27,13 +27,14 @@ h1,h2{color:#1DB954;margin:15px 0}
 .carousel-container{position:relative;overflow:hidden;padding-bottom:20px}
 .carousel{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scroll-behavior:smooth;-webkit-overflow-scrolling:touch;padding:0 5px;gap:15px}
 .carousel::-webkit-scrollbar{display:none}
-.card{flex:0 0 180px;background:#1e1e1e;border-radius:10px;overflow:hidden;scroll-snap-align:start;cursor:pointer;transition:transform .2s}
+.card{flex:0 0 180px;background:#1e1e1e;border-radius:10px;overflow:hidden;scroll-snap-align:start;cursor:pointer;transition:transform .2s;position:relative}
 .card:hover{transform:scale(1.03)}
 .card img{width:100%;height:180px;object-fit:cover}
 .card-content{padding:10px}
 .card-content h3{font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .embed-container{position:relative;padding-bottom:100%;height:0;overflow:hidden;margin-top:10px;border-radius:10px}
 .embed-container iframe{position:absolute;top:0;left:0;width:100%;height:100%}
+.embed-overlay{position:absolute;top:0;left:0;right:0;bottom:0;cursor:pointer;background:transparent}
 .loading{text-align:center;padding:20px;color:#aaa}
 .view{display:none}
 .view.active{display:block}
@@ -167,8 +168,8 @@ function resolveHomeItem(item,isRadio){
 const title=first(item.title,item.name)
 const href=first(item.href,item.url,item.link)
 const image=first(isRadio?item.image:null,item.thumbnail,item.image)
-let embed=first(item.embedUrl,isRadio?item.playlist:null,item.playlist,item.embed)
-let embedClick=first(item.embedLink,item.embedHref,item.embedUrl,item.playlistUrl,item.playlist,item.href,item.url,item.link)
+const embed=first(item.embedUrl,isRadio?item.playlist:null,item.playlist,item.embed)
+let embedClick=first(item.embedLink,item.embedHref,item.playlistUrl,item.playlist,item.href,item.url,item.link)
 if(embed && typeof embed==="string"){
 try{
 const u=new URL(embed,window.location.href)
@@ -177,7 +178,7 @@ embedClick="https://open.spotify.com"+u.pathname.replace("/embed","")
 }
 }catch(e){}
 }
-if(!embedClick && href)embedClick=href
+if(!embedClick)embedClick=href
 return {title,href,image,embed,embedClick}
 }
 
@@ -192,25 +193,29 @@ items.forEach(item=>{
 const f=resolveHomeItem(item,!!isRadio)
 const card=document.createElement("div")
 card.className="card"
-card.onclick=()=>{if(f.href)window.open(f.href,"_blank")}
+card.addEventListener("click",e=>{
+if(e.target && e.target.closest && e.target.closest(".embed-container"))return
+if(f.href)window.open(f.href,"_blank")
+})
+const safeEmbedClick=(f.embedClick||"").replace(/"/g,"&quot;")
 card.innerHTML=`
 <img src="${f.image||'https://via.placeholder.com/300x300?text=Spotify'}" alt="${f.title}">
 <div class="card-content">
 <h3 title="${f.title}">${f.title}</h3>
-${f.embed?`<div class="embed-container" data-embed-click="${(f.embedClick||"").replace(/"/g,"&quot;")}"><iframe src="${f.embed}" frameborder="0" allow="encrypted-media"></iframe></div>`:""}
+${f.embed?`<div class="embed-container"><iframe src="${f.embed}" frameborder="0" allow="encrypted-media"></iframe><div class="embed-overlay" data-link="${safeEmbedClick}"></div></div>`:""}
 </div>`
+const overlay=card.querySelector(".embed-overlay")
+if(overlay){
+overlay.addEventListener("click",e=>{
+e.preventDefault()
+e.stopPropagation()
+const link=overlay.getAttribute("data-link")
+if(link)window.open(link,"_blank")
+})
+}
 c.appendChild(card)
 })
 }
-
-document.addEventListener("click",e=>{
-const wrap=e.target.closest(".embed-container")
-if(!wrap)return
-e.preventDefault()
-e.stopPropagation()
-const link=wrap.getAttribute("data-embed-click")
-if(link)window.open(link,"_blank")
-},true)
 
 async function loadHome(){
 document.querySelectorAll(".carousel").forEach(c=>c.innerHTML='<div class="loading">Loading...</div>')
