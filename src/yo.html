@@ -1,73 +1,125 @@
 <!DOCTYPE html>
 <html class="mobile-web-player" lang="en" dir="ltr">
 <head>
-<meta charSet="utf-8"/>
+<meta charset="utf-8"/>
 <title>Spotify – Mobile Web Player</title>
 <link rel="icon" sizes="32x32" type="image/png" href="https://open.spotifycdn.com/cdn/images/favicon32.b64ecc03.png"/>
 <link rel="icon" sizes="16x16" type="image/png" href="https://open.spotifycdn.com/cdn/images/favicon16.1c487bff.png"/>
 <link rel="icon" href="https://open.spotifycdn.com/cdn/images/favicon.0f31d2ea.ico"/>
-<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <link rel="preload" href="https://encore.scdn.co/fonts/SpotifyMixUI-Regular-cc3b1de388efa4cbca6c75cebc24585e.woff2" as="font" type="font/woff2" crossorigin="anonymous"/>
 <link rel="preload" href="https://encore.scdn.co/fonts/SpotifyMixUITitleVariable-8769ccfde3379b7ebcadd9529b49d0cc.woff2" as="font" type="font/woff2" crossorigin="anonymous"/>
 <link rel="preload" href="https://encore.scdn.co/fonts/SpotifyMixUI-Bold-4264b799009b1db5c491778b1bc8e5b7.woff2" as="font" type="font/woff2" crossorigin="anonymous"/>
-<link rel="preload" href="https://encore.scdn.co/fonts/SpotifyMixUITitleVariable-8769ccfde3379b7ebcadd9529b49d0cc.woff2" as="font" type="font/woff2" crossorigin="anonymous"/>
-<meta property="og:site_name" content="Spotify"/>
-<meta property="fb:app_id" content="174829003346"/>
-<link rel="canonical" href="https://open.spotify.com/download"/>
 <link rel="manifest" href="https://open.spotifycdn.com/cdn/generated/manifest-mobile-web-player.a1ddf51c.json"/>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif}
-body{background:#121212;color:#fff;overflow-x:hidden}
-.app-container{display:flex;flex-direction:column;min-height:100vh;padding:20px;padding-bottom:80px}
-.container{max-width:100%}
-h1,h2{color:#1DB954;margin:15px 0}
-.section{margin-bottom:20px}
-.carousel-container{position:relative;overflow:hidden;padding-bottom:20px}
-.carousel{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scroll-behavior:smooth;-webkit-overflow-scrolling:touch;padding:0 5px;gap:15px}
+:root{
+  --bg:#0f0f10;
+  --panel:#171718;
+  --panel2:#1f1f20;
+  --text:#ffffff;
+  --muted:#b3b3b3;
+  --muted2:#8f8f8f;
+  --green:#1DB954;
+  --green2:#22c55e;
+  --border:#2b2b2c;
+  --shadow:0 12px 40px rgba(0,0,0,.45);
+  --radius:16px;
+}
+*{margin:0;padding:0;box-sizing:border-box;font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Noto Sans,sans-serif}
+body{background:radial-gradient(1200px 700px at 20% -10%, rgba(29,185,84,.20), transparent 55%), radial-gradient(900px 600px at 120% 0%, rgba(34,197,94,.12), transparent 50%), var(--bg);color:var(--text);overflow-x:hidden}
+a{color:inherit}
+.app-container{display:flex;flex-direction:column;min-height:100vh;padding:18px;padding-bottom:86px;max-width:1100px;margin:0 auto}
+.container{width:100%}
+h1{font-size:22px;letter-spacing:.2px;margin:8px 0 14px}
+h2{font-size:16px;color:#d9ffe8;margin:14px 0 10px}
+.subtitle{color:var(--muted);font-size:13px;line-height:1.4}
+.section{margin-bottom:18px}
+
+.carousel-container{position:relative;overflow:hidden}
+.carousel{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scroll-behavior:smooth;-webkit-overflow-scrolling:touch;padding:4px 2px 10px;gap:12px}
 .carousel::-webkit-scrollbar{display:none}
-.card{flex:0 0 180px;background:#1e1e1e;border-radius:10px;overflow:hidden;scroll-snap-align:start;cursor:pointer;transition:transform .2s;position:relative}
-.card:hover{transform:scale(1.03)}
-.card img{width:100%;height:180px;object-fit:cover}
-.card-content{padding:10px}
-.card-content h3{font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.embed-container{position:relative;padding-bottom:100%;height:0;overflow:hidden;margin-top:10px;border-radius:10px}
+
+.card{flex:0 0 185px;background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));border:1px solid rgba(255,255,255,.06);backdrop-filter:blur(8px);border-radius:14px;overflow:hidden;scroll-snap-align:start;cursor:pointer;transition:transform .15s ease, border-color .15s ease;position:relative}
+.card:hover{transform:translateY(-2px);border-color:rgba(29,185,84,.35)}
+.card img{width:100%;height:185px;object-fit:cover}
+.card-content{padding:10px 10px 12px}
+.card-content h3{font-size:13.5px;font-weight:750;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.embed-container{position:relative;padding-bottom:100%;height:0;overflow:hidden;margin-top:10px;border-radius:12px;border:1px solid rgba(255,255,255,.06)}
 .embed-container iframe{position:absolute;top:0;left:0;width:100%;height:100%}
 .embed-overlay{position:absolute;top:0;left:0;right:0;bottom:0;cursor:pointer;background:transparent}
-.loading{text-align:center;padding:20px;color:#aaa}
+.loading{text-align:center;padding:16px;color:var(--muted2);font-size:13px}
+
 .view{display:none}
 .view.active{display:block}
-.search-container{display:flex;align-items:center;background:#2d2d2d;border-radius:25px;padding:10px 15px;margin:15px 0}
-.search-container input{flex:1;min-width:0;border:none;background:transparent;color:#fff;outline:none}
-.search-container button{background:none;border:none;color:#fff;cursor:pointer}
-.panel{background:#1e1e1e;border-radius:14px;padding:15px}
-.search-results{display:none}
+
+.panel{background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));border:1px solid rgba(255,255,255,.08);border-radius:var(--radius);padding:14px;box-shadow:var(--shadow)}
+.search-container{display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);border-radius:999px;padding:10px 12px}
+.search-container input{flex:1;min-width:0;border:none;background:transparent;color:var(--text);outline:none;font-size:14px}
+.search-container input::placeholder{color:rgba(255,255,255,.45)}
+.search-container button{width:42px;height:42px;border-radius:999px;border:none;background:rgba(29,185,84,.18);color:var(--text);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:transform .12s ease, background .12s ease}
+.search-container button:active{transform:scale(.98)}
+.search-container button:hover{background:rgba(29,185,84,.28)}
+
+.search-results{display:none;margin-top:12px}
 .search-results.show{display:block}
-.result-item{background:#2a2a2a;border-radius:16px;padding:15px;margin-bottom:15px;display:flex;flex-direction:column;gap:12px}
+
+.result-item{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:18px;padding:12px;margin-bottom:12px;display:flex;flex-direction:column;gap:12px}
 .result-item:last-child{margin-bottom:0}
 .result-top{display:flex;gap:12px;align-items:flex-start;min-width:0}
-.result-top img{width:70px;height:70px;border-radius:12px;object-fit:cover;flex:0 0 auto}
+.result-top img{width:72px;height:72px;border-radius:14px;object-fit:cover;flex:0 0 auto;border:1px solid rgba(255,255,255,.10)}
 .result-info{flex:1;min-width:0;overflow:hidden}
-.result-info h3{font-size:16px;line-height:1.25;margin-bottom:6px;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
-.result-info p{font-size:13px;color:#b3b3b3;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.result-info h3{font-size:15px;line-height:1.25;margin-bottom:6px;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.result-info p{font-size:12.8px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+
 .result-actions{display:flex;gap:10px}
-.btn{flex:1;border:none;border-radius:25px;padding:10px 12px;font-weight:700;cursor:pointer}
-.btn.download{background:#3d3d3d;color:#fff}
-.btn.open{background:#1DB954;color:#fff}
+.btn{flex:1;border:none;border-radius:999px;padding:11px 12px;font-weight:800;cursor:pointer;transition:transform .12s ease, filter .12s ease, background .12s ease}
 .btn:active{transform:scale(.98)}
-.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:#121212;border-top:1px solid #333;display:flex;justify-content:space-around;padding:10px 0;z-index:1000}
-.nav-item{display:flex;flex-direction:column;align-items:center;color:#aaa;text-decoration:none;font-size:12px;padding:6px 12px}
-.nav-item.active{color:#1DB954}
-.nav-item i{font-size:22px;margin-bottom:4px}
+.btn.download{background:rgba(255,255,255,.08);color:var(--text)}
+.btn.download:hover{background:rgba(255,255,255,.12)}
+.btn.open{background:linear-gradient(90deg, rgba(29,185,84,.95), rgba(34,197,94,.95));color:#04120a}
+.btn.open:hover{filter:brightness(1.05)}
+
+.download-hero{display:flex;flex-direction:column;gap:12px}
+.hero-top{display:flex;gap:12px;align-items:flex-start}
+.hero-icon{width:46px;height:46px;border-radius:14px;background:rgba(29,185,84,.16);border:1px solid rgba(29,185,84,.25);display:flex;align-items:center;justify-content:center;flex:0 0 auto}
+.hero-icon i{font-size:20px;color:rgba(29,185,84,.95)}
+.hero-text h2{margin:0 0 4px;font-size:16px}
+.hero-text .subtitle{margin:0}
+
+.download-card{padding:14px}
+.download-input-row{display:flex;gap:10px;flex-wrap:wrap}
+.download-input-row .search-container{flex:1;min-width:220px}
+.primary-cta{display:flex;align-items:center;justify-content:center;gap:10px;padding:12px 14px;border-radius:999px;border:1px solid rgba(29,185,84,.35);background:linear-gradient(90deg, rgba(29,185,84,.95), rgba(34,197,94,.92));color:#04120a;font-weight:900;cursor:pointer;transition:transform .12s ease, filter .12s ease;min-width:160px}
+.primary-cta:active{transform:scale(.98)}
+.primary-cta:hover{filter:brightness(1.05)}
+.secondary-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+.secondary-actions .btn{flex:1;min-width:140px}
+.status-line{margin-top:10px;color:var(--muted);font-size:12.8px;word-break:break-word}
+.tip-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.chip{font-size:12px;color:rgba(255,255,255,.80);border:1px solid rgba(255,255,255,.10);background:rgba(255,255,255,.04);padding:7px 10px;border-radius:999px}
+.preview-box{margin-top:12px;border:1px dashed rgba(255,255,255,.16);border-radius:16px;padding:12px;display:flex;gap:12px;align-items:center}
+.preview-box img{width:52px;height:52px;border-radius:14px;object-fit:cover;border:1px solid rgba(255,255,255,.10)}
+.preview-meta{min-width:0;flex:1}
+.preview-meta .t{font-weight:850;font-size:13.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.preview-meta .s{color:var(--muted);font-size:12.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:rgba(15,15,16,.88);backdrop-filter:blur(10px);border-top:1px solid rgba(255,255,255,.08);display:flex;justify-content:space-around;padding:10px 0;z-index:1000}
+.nav-item{display:flex;flex-direction:column;align-items:center;color:rgba(255,255,255,.60);text-decoration:none;font-size:12px;padding:6px 12px;gap:4px}
+.nav-item.active{color:rgba(29,185,84,.95)}
+.nav-item i{font-size:20px}
+
 @media(min-width:768px){
-.card{flex:0 0 200px}
-.card img{height:200px}
+  h1{font-size:26px}
+  .card{flex:0 0 210px}
+  .card img{height:210px}
+  .app-container{padding:22px;padding-bottom:92px}
 }
 </style>
 </head>
-<body>
 
+<body>
 <div class="app-container">
   <div class="container">
 
@@ -104,27 +156,58 @@ h1,h2{color:#1DB954;margin:15px 0}
       <h1>Search</h1>
       <div class="search-container">
         <input type="text" id="searchInput" placeholder="Search for songs...">
-        <button id="searchButton"><i class="fas fa-search"></i></button>
+        <button id="searchButton" aria-label="Search"><i class="fas fa-search"></i></button>
       </div>
       <div class="panel search-results" id="searchResults"></div>
     </div>
 
     <div id="downloadView" class="view">
       <h1>Downloader</h1>
-      <div class="panel">
-        <div style="color:#b3b3b3;margin-bottom:10px;line-height:1.4">
-          Download Songs, Playlists, Albums &amp; Artist Songs from Spotify
-        </div>
-        <div class="search-container" style="margin:0">
-          <input type="text" id="downloadUrlInput" placeholder="Paste Spotify URL here...">
-          <button id="downloadBtn"><i class="fas fa-download"></i></button>
-        </div>
-        <div id="downloadStatus" style="margin-top:10px;color:#aaa;word-break:break-word"></div>
-        <div style="margin-top:12px;display:flex;gap:10px;flex-wrap:wrap">
-          <button class="btn download" id="openDownloadBtn" style="flex:1">Open Download</button>
-          <button class="btn download" id="clearDownloadBtn" style="flex:1">Clear</button>
+
+      <div class="panel download-card">
+        <div class="download-hero">
+          <div class="hero-top">
+            <div class="hero-icon"><i class="fas fa-download"></i></div>
+            <div class="hero-text">
+              <h2>Download from Spotify</h2>
+              <div class="subtitle">Paste a Spotify track/album/playlist URL, then tap Download.</div>
+            </div>
+          </div>
+
+          <div class="download-input-row">
+            <div class="search-container" style="margin:0">
+              <input type="text" id="downloadUrlInput" placeholder="Paste Spotify URL here...">
+              <button id="downloadBtn" aria-label="Download"><i class="fas fa-arrow-right"></i></button>
+            </div>
+            <button class="primary-cta" id="downloadPrimaryBtn"><i class="fas fa-bolt"></i><span>Download</span></button>
+          </div>
+
+          <div class="tip-row">
+            <span class="chip">Track</span>
+            <span class="chip">Album</span>
+            <span class="chip">Playlist</span>
+            <span class="chip">Artist</span>
+          </div>
+
+          <div id="downloadPreview" style="display:none" class="preview-box">
+            <img id="downloadPreviewImg" src="https://via.placeholder.com/100?text=Spotify" alt="Cover">
+            <div class="preview-meta">
+              <div class="t" id="downloadPreviewTitle">Ready</div>
+              <div class="s" id="downloadPreviewSub">Paste a URL to preview</div>
+            </div>
+            <button class="btn open" id="openSpotifyBtn" style="flex:0 0 auto; padding:10px 14px">Open</button>
+          </div>
+
+          <div id="downloadStatus" class="status-line"></div>
+
+          <div class="secondary-actions">
+            <button class="btn download" id="openDownloadBtn">Open Download</button>
+            <button class="btn download" id="pasteDownloadBtn">Paste</button>
+            <button class="btn download" id="clearDownloadBtn">Clear</button>
+          </div>
         </div>
       </div>
+
     </div>
 
   </div>
@@ -138,180 +221,263 @@ h1,h2{color:#1DB954;margin:15px 0}
 
 <script>
 const HOME_API="/spotify/home"
+const SEARCH_API_BASE="/spotify/search"
+const API_KEY="syugg"
 let lastDownloadLink=""
+let lastSpotifyUrl=""
 
 function setView(id){
-document.querySelectorAll(".view").forEach(v=>v.classList.remove("active"))
-document.getElementById(id).classList.add("active")
-document.querySelectorAll(".nav-item").forEach(n=>n.classList.remove("active"))
-document.querySelector(`.nav-item[data-view="${id}"]`).classList.add("active")
-if(id==="searchView")document.getElementById("searchInput").focus()
-if(id==="downloadView")document.getElementById("downloadUrlInput").focus()
+  document.querySelectorAll(".view").forEach(v=>v.classList.remove("active"))
+  document.getElementById(id).classList.add("active")
+  document.querySelectorAll(".nav-item").forEach(n=>n.classList.remove("active"))
+  const active=document.querySelector(`.nav-item[data-view="${id}"]`)
+  if(active)active.classList.add("active")
+  if(id==="searchView")document.getElementById("searchInput").focus()
+  if(id==="downloadView")document.getElementById("downloadUrlInput").focus()
 }
 
 document.querySelectorAll(".nav-item").forEach(item=>{
-item.addEventListener("click",e=>{
-e.preventDefault()
-setView(item.dataset.view)
-})
+  item.addEventListener("click",e=>{
+    e.preventDefault()
+    setView(item.dataset.view)
+  })
 })
 
 function first(){
-for(let i=0;i<arguments.length;i++){
-const v=arguments[i]
-if(v!==undefined&&v!==null&&String(v).trim()!=="")return v
-}
-return ""
+  for(let i=0;i<arguments.length;i++){
+    const v=arguments[i]
+    if(v!==undefined&&v!==null&&String(v).trim()!=="")return v
+  }
+  return ""
 }
 
 function resolveHomeItem(item,isRadio){
-const title=first(item.title,item.name)
-const href=first(item.href,item.url,item.link)
-const image=first(isRadio?item.image:null,item.thumbnail,item.image)
-const embed=first(item.embedUrl,isRadio?item.playlist:null,item.playlist,item.embed)
-const embedClick=embed || ""
-return {title,href,image,embed,embedClick}
+  const title=first(item.title,item.name)
+  const href=first(item.href,item.url,item.link)
+  const image=first(isRadio?item.image:null,item.thumbnail,item.image)
+  const embed=first(item.embedUrl,isRadio?item.playlist:null,item.playlist,item.embed)
+  const embedClick=embed || ""
+  return {title,href,image,embed,embedClick}
 }
 
 function renderHomeCards(containerId,items,isRadio){
-const c=document.getElementById(containerId)
-c.innerHTML=""
-if(!Array.isArray(items)||items.length===0){
-c.innerHTML='<div class="loading">No items.</div>'
-return
-}
-items.forEach(item=>{
-const f=resolveHomeItem(item,!!isRadio)
-const card=document.createElement("div")
-card.className="card"
-card.addEventListener("click",e=>{
-if(e.target && e.target.closest && e.target.closest(".embed-container"))return
-if(f.href)window.open(f.href,"_blank")
-})
-const safeEmbedClick=(f.embedClick||"").replace(/"/g,"&quot;")
-card.innerHTML=`
-<img src="${f.image||'https://via.placeholder.com/300x300?text=Spotify'}" alt="${f.title}">
-<div class="card-content">
-<h3 title="${f.title}">${f.title}</h3>
-${f.embed?`<div class="embed-container"><iframe src="${f.embed}" frameborder="0" allow="encrypted-media"></iframe><div class="embed-overlay" data-link="${safeEmbedClick}"></div></div>`:""}
-</div>`
-const overlay=card.querySelector(".embed-overlay")
-if(overlay){
-overlay.addEventListener("click",e=>{
-e.preventDefault()
-e.stopPropagation()
-const link=overlay.getAttribute("data-link")
-if(link)window.open(link,"_blank")
-})
-}
-c.appendChild(card)
-})
+  const c=document.getElementById(containerId)
+  c.innerHTML=""
+  if(!Array.isArray(items)||items.length===0){
+    c.innerHTML='<div class="loading">No items.</div>'
+    return
+  }
+  items.forEach(item=>{
+    const f=resolveHomeItem(item,!!isRadio)
+    const card=document.createElement("div")
+    card.className="card"
+    card.addEventListener("click",e=>{
+      if(e.target && e.target.closest && e.target.closest(".embed-container"))return
+      if(f.href)window.open(f.href,"_blank")
+    })
+    const safeEmbedClick=(f.embedClick||"").replace(/"/g,"&quot;")
+    card.innerHTML=`
+      <img src="${f.image||'https://via.placeholder.com/300x300?text=Spotify'}" alt="${f.title}">
+      <div class="card-content">
+        <h3 title="${f.title}">${f.title}</h3>
+        ${f.embed?`<div class="embed-container"><iframe src="${f.embed}" frameborder="0" allow="encrypted-media"></iframe><div class="embed-overlay" data-link="${safeEmbedClick}"></div></div>`:""}
+      </div>`
+    const overlay=card.querySelector(".embed-overlay")
+    if(overlay){
+      overlay.addEventListener("click",e=>{
+        e.preventDefault()
+        e.stopPropagation()
+        const link=overlay.getAttribute("data-link")
+        if(link)window.open(link,"_blank")
+      })
+    }
+    c.appendChild(card)
+  })
 }
 
 async function loadHome(){
-document.querySelectorAll(".carousel").forEach(c=>c.innerHTML='<div class="loading">Loading...</div>')
-try{
-const res=await fetch(HOME_API)
-const data=await res.json()
-const r=data.results||{}
-renderHomeCards("trendingSongs",r.trendingSongs,false)
-renderHomeCards("popularArtists",r.popularArtists,false)
-renderHomeCards("popularAlbums",r.popularAlbums,false)
-renderHomeCards("popularRadio",r.popularRadio,true)
-renderHomeCards("featuredCharts",r.featuredCharts,true)
-}catch(e){
-console.error(e)
-document.querySelectorAll(".carousel").forEach(c=>c.innerHTML='<div class="loading">Failed to load.</div>')
-}
+  document.querySelectorAll(".carousel").forEach(c=>c.innerHTML='<div class="loading">Loading...</div>')
+  try{
+    const res=await fetch(HOME_API)
+    const data=await res.json()
+    const r=data.results||{}
+    renderHomeCards("trendingSongs",r.trendingSongs,false)
+    renderHomeCards("popularArtists",r.popularArtists,false)
+    renderHomeCards("popularAlbums",r.popularAlbums,false)
+    renderHomeCards("popularRadio",r.popularRadio,true)
+    renderHomeCards("featuredCharts",r.featuredCharts,true)
+  }catch(e){
+    document.querySelectorAll(".carousel").forEach(c=>c.innerHTML='<div class="loading">Failed to load.</div>')
+  }
 }
 
 function buildDownloadLink(url){
-return `/Spotify/download?url=${encodeURIComponent(url)}`
+  return `/Spotify/download?url=${encodeURIComponent(url)}`
 }
 
-function renderSearch(data){
-const box=document.getElementById("searchResults")
-const songs=Array.isArray(data&&data.songs)?data.songs:[]
-if(!songs.length){
-box.innerHTML='<div class="loading">No results found.</div>'
-return
+function normalizeSpotifyUrl(u){
+  return (u||"").trim()
 }
-box.innerHTML=""
-songs.slice(0,20).forEach(song=>{
-const title=first(song.title)
-const artist=first(song.artist)
-const duration=first(song.duration)
-const thumb=first(song.thumbnail,"https://via.placeholder.com/100?text=Spotify")
-const url=first(song.url)
-const item=document.createElement("div")
-item.className="result-item"
-item.innerHTML=`
-<div class="result-top">
-<img src="${thumb}" alt="${title}">
-<div class="result-info">
-<h3>${title}</h3>
-<p>${artist}${duration?(" • "+duration):""}</p>
-</div>
-</div>
-<div class="result-actions">
-<button class="btn download">To Download</button>
-<button class="btn open">Open</button>
-</div>`
-item.querySelector(".btn.download").onclick=()=>{
-document.getElementById("downloadUrlInput").value=url
-lastDownloadLink=""
-document.getElementById("downloadStatus").textContent="URL pasted."
-setView("downloadView")
+
+function parseSpotifyInfoFromUrl(u){
+  const url=normalizeSpotifyUrl(u)
+  if(!url)return {kind:"",id:""}
+  const m=url.match(/open\.spotify\.com\/(track|album|playlist|artist)\/([a-zA-Z0-9]+)/)
+  if(!m)return {kind:"",id:""}
+  return {kind:m[1],id:m[2]}
 }
-item.querySelector(".btn.open").onclick=()=>{if(url)window.open(url,"_blank")}
-box.appendChild(item)
+
+function setDownloadPreview({title,sub,img,url}){
+  const box=document.getElementById("downloadPreview")
+  box.style.display="flex"
+  document.getElementById("downloadPreviewTitle").textContent=title||"Ready"
+  document.getElementById("downloadPreviewSub").textContent=sub||""
+  document.getElementById("downloadPreviewImg").src=img||"https://via.placeholder.com/100?text=Spotify"
+  lastSpotifyUrl=url||""
+}
+
+function hideDownloadPreview(){
+  document.getElementById("downloadPreview").style.display="none"
+  lastSpotifyUrl=""
+}
+
+document.getElementById("openSpotifyBtn").addEventListener("click",()=>{
+  if(lastSpotifyUrl)window.open(lastSpotifyUrl,"_blank")
 })
+
+function mapSearchItemToUI(item){
+  const title=first(item.title,item.name)
+  const artistNames=Array.isArray(item.artist_names)?item.artist_names.join(", "):first(item.artists && item.artists[0] && item.artists[0].name)
+  const duration=first(item.duration)
+  const thumb=first(item.thumbnails && item.thumbnails.medium, item.thumbnails && item.thumbnails.small, item.thumbnails && item.thumbnails.large, item.album && item.album.thumbnails && item.album.thumbnails.medium, item.album && item.album.thumbnails && item.album.thumbnails.small, item.album && item.album.thumbnails && item.album.thumbnails.large, "https://via.placeholder.com/100?text=Spotify")
+  const url=first(item.url, item.external_urls && item.external_urls.spotify, item.href)
+  const id=first(item.id)
+  return {id,title,artist:artistNames,duration,thumb,url}
+}
+
+function renderSearch(apiResponse){
+  const box=document.getElementById("searchResults")
+  const items=Array.isArray(apiResponse && apiResponse.data)?apiResponse.data:[]
+  if(!items.length){
+    box.innerHTML='<div class="loading">No results found.</div>'
+    return
+  }
+  box.innerHTML=""
+  items.slice(0,20).forEach(raw=>{
+    const song=mapSearchItemToUI(raw)
+    const item=document.createElement("div")
+    item.className="result-item"
+    item.innerHTML=`
+      <div class="result-top">
+        <img src="${song.thumb}" alt="${song.title}">
+        <div class="result-info">
+          <h3>${song.title}</h3>
+          <p>${song.artist}${song.duration?(" • "+song.duration):""}</p>
+        </div>
+      </div>
+      <div class="result-actions">
+        <button class="btn download">To Download</button>
+        <button class="btn open">Open</button>
+      </div>`
+    item.querySelector(".btn.download").onclick=()=>{
+      if(song.url){
+        document.getElementById("downloadUrlInput").value=song.url
+        document.getElementById("downloadStatus").textContent="URL pasted. Tap Download."
+        setDownloadPreview({title:song.title, sub:song.artist, img:song.thumb, url:song.url})
+        lastDownloadLink=""
+        setView("downloadView")
+      }else{
+        document.getElementById("downloadStatus").textContent="No Spotify URL found for this item."
+        setView("downloadView")
+      }
+    }
+    item.querySelector(".btn.open").onclick=()=>{if(song.url)window.open(song.url,"_blank")}
+    box.appendChild(item)
+  })
 }
 
 async function doSearch(){
-const q=document.getElementById("searchInput").value.trim()
-if(!q)return
-const box=document.getElementById("searchResults")
-box.classList.add("show")
-box.innerHTML='<div class="loading">Searching...</div>'
-try{
-const res=await fetch(`/song-details?search=${encodeURIComponent(q)}`)
-const data=await res.json()
-renderSearch(data)
-}catch(e){
-console.error(e)
-box.innerHTML='<div class="loading">Error searching. Try again.</div>'
-}
+  const q=document.getElementById("searchInput").value.trim()
+  if(!q)return
+  const box=document.getElementById("searchResults")
+  box.classList.add("show")
+  box.innerHTML='<div class="loading">Searching...</div>'
+  try{
+    const url=`${SEARCH_API_BASE}?q=${encodeURIComponent(q)}&apikey=${encodeURIComponent(API_KEY)}`
+    const res=await fetch(url)
+    const data=await res.json()
+    if(data && data.status===false){
+      box.innerHTML='<div class="loading">Search failed.</div>'
+      return
+    }
+    renderSearch(data)
+  }catch(e){
+    box.innerHTML='<div class="loading">Error searching. Try again.</div>'
+  }
 }
 
 document.getElementById("searchButton").addEventListener("click",doSearch)
 document.getElementById("searchInput").addEventListener("keydown",e=>{if(e.key==="Enter")doSearch()})
 
 function openDownload(){
-const url=document.getElementById("downloadUrlInput").value.trim()
-if(!url){
-document.getElementById("downloadStatus").textContent="Paste a Spotify URL first."
-return
-}
-lastDownloadLink=buildDownloadLink(url)
-window.open(lastDownloadLink,"_blank")
-document.getElementById("downloadStatus").textContent="Opening..."
+  const url=normalizeSpotifyUrl(document.getElementById("downloadUrlInput").value)
+  if(!url){
+    document.getElementById("downloadStatus").textContent="Paste a Spotify URL first."
+    hideDownloadPreview()
+    return
+  }
+  const info=parseSpotifyInfoFromUrl(url)
+  if(info.kind){
+    setDownloadPreview({title:`Spotify ${info.kind}`, sub:`ID: ${info.id}`, img:"https://via.placeholder.com/100?text=Spotify", url})
+  }else{
+    setDownloadPreview({title:"Spotify Link", sub:"Ready to download", img:"https://via.placeholder.com/100?text=Spotify", url})
+  }
+  lastDownloadLink=buildDownloadLink(url)
+  window.open(lastDownloadLink,"_blank")
+  document.getElementById("downloadStatus").textContent="Opening download..."
 }
 
 document.getElementById("downloadBtn").addEventListener("click",openDownload)
+document.getElementById("downloadPrimaryBtn").addEventListener("click",openDownload)
 document.getElementById("openDownloadBtn").addEventListener("click",openDownload)
 
 document.getElementById("clearDownloadBtn").addEventListener("click",()=>{
-document.getElementById("downloadUrlInput").value=""
-lastDownloadLink=""
-document.getElementById("downloadStatus").textContent=""
+  document.getElementById("downloadUrlInput").value=""
+  lastDownloadLink=""
+  document.getElementById("downloadStatus").textContent=""
+  hideDownloadPreview()
+})
+
+document.getElementById("downloadUrlInput").addEventListener("input",()=>{
+  const url=normalizeSpotifyUrl(document.getElementById("downloadUrlInput").value)
+  if(!url){
+    document.getElementById("downloadStatus").textContent=""
+    hideDownloadPreview()
+    return
+  }
+  setDownloadPreview({title:"Ready", sub:"Tap Download to continue", img:"https://via.placeholder.com/100?text=Spotify", url})
 })
 
 document.getElementById("downloadUrlInput").addEventListener("keydown",e=>{if(e.key==="Enter")openDownload()})
 
+document.getElementById("pasteDownloadBtn").addEventListener("click",async()=>{
+  try{
+    const t=await navigator.clipboard.readText()
+    if(t && String(t).trim()){
+      document.getElementById("downloadUrlInput").value=String(t).trim()
+      document.getElementById("downloadStatus").textContent="Pasted from clipboard."
+      setDownloadPreview({title:"Ready", sub:"Tap Download to continue", img:"https://via.placeholder.com/100?text=Spotify", url:String(t).trim()})
+    }else{
+      document.getElementById("downloadStatus").textContent="Clipboard is empty."
+    }
+  }catch(e){
+    document.getElementById("downloadStatus").textContent="Clipboard paste not allowed."
+  }
+})
+
 document.addEventListener("DOMContentLoaded",()=>{
-loadHome()
-setView("homeView")
+  loadHome()
+  setView("homeView")
 })
 </script>
 
