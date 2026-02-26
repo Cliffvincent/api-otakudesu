@@ -235,7 +235,7 @@ async function searching(query, type = 'track', limit = 20) {
 
 app.get('/spotify/home', async (req, res) => {
   try {
-    const { data } = await axios.get('https://open.spotify.com/');
+    const { data } = await axios.get('https://open.spotify.com/?country=ph');
     const $ = cheerio.load(data);
 
     const trendingSongs = [];
