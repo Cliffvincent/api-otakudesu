@@ -303,7 +303,7 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'src', 'yo.html'));
 });
 
-const API_KEY = 'b7dced12866eeef7ada4537c3fa952135e6c9680b0b332bcad99866823b6199b';
+const API_KEY = 'a3ef2775f0e82665c5cdcd9e3af1487f9c25b70c5e7994f5ec57f4f1502d1c41';
 
 app.get('/song-details', async (req, res) => {
   try {
